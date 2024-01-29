@@ -1,0 +1,7 @@
+### STS ###
+*.class
+
+
+
+### IntelliJ IDEA ###
+.idea

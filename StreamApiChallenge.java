@@ -122,7 +122,7 @@ public class StreamApiChallenge {
                 .collect(Collectors.groupingBy(Student::getClassOfStudent));
 
         List<String> classWithAnyStudentsWithGradeA = studentsByClass.entrySet().stream()
-                .filter(entry -> entry.getValue().stream().anyMatch(student -> student.getGrade() == "A"))
+                .filter(entry -> entry.getValue().stream().anyMatch(student -> student.getGrade().equals("A")))
                 .map(Map.Entry::getKey).collect(Collectors.toList());
         
         System.out.println("List of classes with at least one student with a grade of A:- ");
@@ -131,7 +131,7 @@ public class StreamApiChallenge {
         // I want to find the classes where all students have a grade of 'A'
 
         List<String> classWithAllStudentsWithGradeA = studentsByClass.entrySet().stream()
-                .filter(entry -> entry.getValue().stream().allMatch(student -> student.getGrade() == "A"))
+                .filter(entry -> entry.getValue().stream().allMatch(student -> "A".equals(student.getGrade())))
                 .map(Map.Entry::getKey).collect(Collectors.toList());
 
         System.out.println("List of classes with at all students with a grade of A:- ");

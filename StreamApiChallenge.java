@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -92,44 +93,49 @@ public class StreamApiChallenge {
         Student s20 = new Student(9, "Ujjwal", "C4", "A");
         students.add(s20);
 
-        //  There are four classes: "C1," "C2," "C3," and "C4," each containing five students (randomly). 
-        // Now, I want to retrieve a list of students with a grade of 'A' and group them by class.
+        // There are four classes: "C1," "C2," "C3," and "C4," each containing five
+        // students (randomly).
+        // Now, I want to retrieve a list of students with a grade of 'A' and group them
+        // by class.
 
-        
         Stream<Student> stream = students.stream();
-        
-        List<Student> studentsWithGradeA = stream.filter(student -> student.getGrade() == "A").collect(Collectors.toList());
+
+        List<Student> studentsWithGradeA = stream.filter(student -> student.getGrade() == "A")
+                .collect(Collectors.toList());
 
         // group them by class
-        Map<String, List<Student>> studentsWithGradeAByClass = studentsWithGradeA.stream().collect(Collectors.groupingBy(Student::getClassOfStudent));
+        Map<String, List<Student>> studentsWithGradeAByClass = studentsWithGradeA.stream()
+                .collect(Collectors.groupingBy(Student::getClassOfStudent));
         System.out.println("List of students with Grade A by class:- ");
         printClassWithStudent(studentsWithGradeAByClass);
 
-
         stream = students.stream();
 
-
-        // I want to retrieve a list of classes that have at least one student with a grade of 'A'
+        // I want to retrieve a list of classes that have at least one student with a
+        // grade of 'A'
         List<String> classWithAtleastOneStudentWithGradeA = new ArrayList<>(studentsWithGradeAByClass.keySet());
         System.out.println("List of classes with at least one student with a grade of A:- ");
         classWithAtleastOneStudentWithGradeA.forEach(name -> System.out.println(name));
 
+        // AnyMatch can also be used
+        Map<String, List<Student>> studentsByClass = students.stream()
+                .collect(Collectors.groupingBy(Student::getClassOfStudent));
+
+        List<String> classWithAnyStudentsWithGradeA = studentsByClass.entrySet().stream()
+                .filter(entry -> entry.getValue().stream().anyMatch(student -> student.getGrade() == "A"))
+                .map(Map.Entry::getKey).collect(Collectors.toList());
+        
+        System.out.println("List of classes with at least one student with a grade of A:- ");
+        classWithAnyStudentsWithGradeA.forEach(name -> System.out.println(name));
 
         // I want to find the classes where all students have a grade of 'A'
-        List<String> classWithAllStudentsWithGradeA = new ArrayList<String>();
-        studentsWithGradeAByClass.forEach((classOfStudent, studentsList) -> {
-            if(studentsList.size() == 5) {
-                classWithAllStudentsWithGradeA.add(classOfStudent);
-            }
-        });
+
+        List<String> classWithAllStudentsWithGradeA = studentsByClass.entrySet().stream()
+                .filter(entry -> entry.getValue().stream().allMatch(student -> student.getGrade() == "A"))
+                .map(Map.Entry::getKey).collect(Collectors.toList());
+
         System.out.println("List of classes with at all students with a grade of A:- ");
         classWithAllStudentsWithGradeA.forEach(name -> System.out.println(name));
 
     }
 }
-
-
-
-
-
-
